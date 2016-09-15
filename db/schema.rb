@@ -10,10 +10,33 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160915142744) do
+ActiveRecord::Schema.define(version: 20160915164600) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "diet_ingredients", force: :cascade do |t|
+    t.integer  "ingredient_id"
+    t.integer  "diet_id"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+    t.index ["diet_id"], name: "index_diet_ingredients_on_diet_id", using: :btree
+    t.index ["ingredient_id"], name: "index_diet_ingredients_on_ingredient_id", using: :btree
+  end
+
+  create_table "diets", force: :cascade do |t|
+    t.string   "name"
+    t.integer  "diet_of_reference"
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+  end
+
+  create_table "ingredients", force: :cascade do |t|
+    t.string   "name"
+    t.string   "type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                  default: "", null: false
@@ -32,4 +55,6 @@ ActiveRecord::Schema.define(version: 20160915142744) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   end
 
+  add_foreign_key "diet_ingredients", "diets"
+  add_foreign_key "diet_ingredients", "ingredients"
 end
