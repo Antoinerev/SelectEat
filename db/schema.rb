@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160915164600) do
+ActiveRecord::Schema.define(version: 20160916094103) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -38,6 +38,27 @@ ActiveRecord::Schema.define(version: 20160915164600) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "restaurant_diet_scores", force: :cascade do |t|
+    t.integer  "score"
+    t.string   "comment"
+    t.integer  "diet_id"
+    t.integer  "restaurant_id"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+    t.index ["diet_id"], name: "index_restaurant_diet_scores_on_diet_id", using: :btree
+    t.index ["restaurant_id"], name: "index_restaurant_diet_scores_on_restaurant_id", using: :btree
+  end
+
+  create_table "restaurants", force: :cascade do |t|
+    t.string   "name"
+    t.string   "picture"
+    t.string   "description"
+    t.string   "address"
+    t.string   "food_type"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
   create_table "users", force: :cascade do |t|
     t.string   "email",                  default: "", null: false
     t.string   "encrypted_password",     default: "", null: false
@@ -51,10 +72,19 @@ ActiveRecord::Schema.define(version: 20160915164600) do
     t.inet     "last_sign_in_ip"
     t.datetime "created_at",                          null: false
     t.datetime "updated_at",                          null: false
+    t.string   "first_name"
+    t.string   "last_name"
+    t.string   "status"
+    t.string   "avatar"
+    t.integer  "diet_id"
+    t.index ["diet_id"], name: "index_users_on_diet_id", using: :btree
     t.index ["email"], name: "index_users_on_email", unique: true, using: :btree
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   end
 
   add_foreign_key "diet_ingredients", "diets"
   add_foreign_key "diet_ingredients", "ingredients"
+  add_foreign_key "restaurant_diet_scores", "diets"
+  add_foreign_key "restaurant_diet_scores", "restaurants"
+  add_foreign_key "users", "diets"
 end
